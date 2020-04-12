@@ -10,6 +10,7 @@
                         <button fullWidth nbButton [status]="'success'" (click)="useOpenModal(dialogCreate, 'create')">Thêm mới</button>
                     </div>
                     <div class="col-4 my-2">
+                        <button [disabled]="!selectedAccount" fullWidth nbButton [status]="'warning'" (click)="useOpenModal(dialogUpdate, 'update')">Cập nhật</button>
                     </div>
                     <div class="col-4 my-2">
                         <button [disabled]="!selectedAccount" fullWidth nbButton [status]="'danger'" (click)="delete()">Xóa</button>
