@@ -1,0 +1,171 @@
+<nb-card>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-12 col-xl-4 mb-2">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <span style="font-size: 1.5rem">Thông tin tài khoản</span>
+                    </div>
+                    <div class="col-4 my-2">
+                        <button fullWidth nbButton [status]="'success'" (click)="useOpenModal(dialogCreate, 'create')">Thêm mới</button>
+                    </div>
+                    <div class="col-4 my-2">
+                    </div>
+                    <div class="col-4 my-2">
+                        <button [disabled]="!selectedAccount" fullWidth nbButton [status]="'danger'" (click)="delete()">Xóa</button>
+                    </div>
+                    <div class="col-12 my-2">
+                        <span>Thư điện tử: </span><br>
+                        <input type="text" placeholder="Nhập thư điện tử để tìm kiếm" class="mb-2" [(ngModel)]="searchObject.email" (ngModelChange)="useFilter()" nbInput fullWidth status="basic">
+                    </div>
+
+                    <div class="col-12 my-2">
+                        <span>Họ và tên: </span><br>
+                        <input type="text" placeholder="Nhập họ và tên để tìm kiếm" class="mb-2" [(ngModel)]="searchObject.fullname" (ngModelChange)="useFilter()" nbInput fullWidth status="basic">
+                    </div>
+
+                    <div class="col-12 my-2">
+                        <span>Số điện thoại: </span><br>
+                        <input type="text" placeholder="Nhập số điện thoại để tìm kiếm" class="mb-2" [(ngModel)]="searchObject.phone" (ngModelChange)="useFilter()" nbInput fullWidth status="basic">
+                    </div>
+
+                    <div class="col-12 my-2">
+                        <span>Đây là: </span><br>
+                        <nb-select [(ngModel)]="searchObject.role" (ngModelChange)="useFilter()" fullWidth>
+                            <nb-option *ngFor="let option of [{value: '', label: 'Tất cả'}, {value: 'user', label: 'Người dùng'}, {value: 'driver', label: 'Người lái'}]" [value]="option.value">
+                                <span>
+                          {{ option.label }}
+                      </span>
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-8">
+                <ngx-datatable class='table table-hover material' [columnMode]="'force'" [reorderable]="true" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [rows]="searchlist" [scrollbarH]="true" [selectionType]="'single'" [limit]="10" [selected]="selected"
+                    [messages]="{emptyMessage: '',totalMessage: 'total',selectedMessage: 'selected'}" (select)="onSelect($event)">
+                    <ngx-datatable-column [name]="'Thư điện tử'" [width]="100" [prop]="'email'">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [name]="'Họ và tên'" [width]="100" [prop]="'fullname'">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [name]="'Số điện thoại'" [width]="100" [prop]="'phone'">
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                            {{value | mask: '0000-000-000'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [name]="'Đây là'" [width]="100" [prop]="'role'">
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                            {{value === 'user' ? 'Người dùng' : 'Người lái'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #dialogUpdate let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>
+            <span>Cập nhật thông tin người dùng/người lái</span>
+            <button (click)="dialogRef.close()" [status]="'danger'" nbButton size="small" class="float-right">
+              <span>
+                  {{'Close'}}
+              </span>
+          </button>
+        </nb-card-header>
+        <nb-card-body style="width: 30vw">
+            <div class="row" [formGroup]="form">
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('email').invalid && (form.get('email').touched || form.get('email').dirty)">Thư điện tử: </span><br>
+                    <input type="text" class="mb-2" formControlName="email" nbInput fullWidth [status]="form.get('email').invalid && (form.get('email').touched || form.get('email').dirty) ? 'danger' : 'basic'">
+                    <span *ngIf="form.get('email').invalid && (form.get('email').touched || form.get('email').dirty)" class="text-danger">Thư điện tử nhập không đúng định dạng</span>
+                </div>
+
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('fullname').invalid && (form.get('fullname').touched || form.get('fullname').dirty)">Họ và tên: </span><br>
+                    <input type="text" class="mb-2" formControlName="fullname" (ngModelChange)="useFilter()" nbInput fullWidth [status]="form.get('fullname').invalid && (form.get('fullname').touched || form.get('fullname').dirty) ? 'danger' : 'basic'">
+                    <span *ngIf="form.get('fullname').invalid && (form.get('fullname').touched || form.get('fullname').dirty)" class="text-danger">Họ và tên không được bỏ trống</span>
+                </div>
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('phone').invalid && (form.get('phone').touched || form.get('phone').dirty)">Số điện thoại: </span><br>
+                    <input type="text" class="mb-2" formControlName="phone" (ngModelChange)="useFilter()" nbInput fullWidth [status]="form.get('phone').invalid && (form.get('phone').touched || form.get('phone').dirty) ? 'danger' : 'basic'">
+                    <span *ngIf="form.get('phone').invalid && (form.get('phone').touched || form.get('phone').dirty)" class="text-danger">Số điện thoại nhập không đúng định dạng</span>
+                </div>
+
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('role').invalid && (form.get('role').touched || form.get('role').dirty)">Đây là: </span><br>
+                    <nb-select formControlName="role" (ngModelChange)="useFilter()" fullWidth [status]="form.get('role').invalid && (form.get('role').touched || form.get('role').dirty) ? 'danger' : 'basic'">
+                        <nb-option *ngFor="let option of [{value: 'user', label: 'Người dùng'}, {value: 'driver', label: 'Người lái'}]" [value]="option.value">
+                            <span>
+          {{ option.label }}
+      </span>
+                        </nb-option>
+                    </nb-select>
+                    <span *ngIf="form.get('role').invalid && (form.get('role').touched || form.get('role').dirty)" class="text-danger">Role là bắt buộc</span>
+                </div>
+            </div>
+        </nb-card-body>
+        <nb-card-footer>
+            <button (click)="update()" [disabled]="form.invalid" [status]="'primary'" nbButton fullWidth>
+            <span><nb-icon [icon]="'plus-circle-outline'"></nb-icon> Cập nhật</span>
+        </button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+
+
+<ng-template #dialogCreate let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>
+            <span>Thêm mới thông tin người dùng/người lái</span>
+            <button (click)="dialogRef.close()" [status]="'danger'" nbButton size="small" class="float-right">
+            <span>
+                {{'Close'}}
+            </span>
+            </button>
+        </nb-card-header>
+        <nb-card-body style="width: 30vw">
+            <div class="row" [formGroup]="form">
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('email').invalid && (form.get('email').touched || form.get('email').dirty)">Thư điện tử: </span><br>
+                    <input type="text" class="mb-2" formControlName="email" nbInput fullWidth [status]="form.get('email').invalid && (form.get('email').touched || form.get('email').dirty) ? 'danger' : 'basic'">
+                    <span *ngIf="form.get('email').invalid && (form.get('email').touched || form.get('email').dirty)" class="text-danger">Thư điện tử nhập không đúng định dạng</span>
+                </div>
+
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('fullname').invalid && (form.get('fullname').touched || form.get('fullname').dirty)">Họ và tên: </span><br>
+                    <input type="text" class="mb-2" formControlName="fullname" (ngModelChange)="useFilter()" nbInput fullWidth [status]="form.get('fullname').invalid && (form.get('fullname').touched || form.get('fullname').dirty) ? 'danger' : 'basic'">
+                    <span *ngIf="form.get('fullname').invalid && (form.get('fullname').touched || form.get('fullname').dirty)" class="text-danger">Họ và tên không được bỏ trống</span>
+                </div>
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('password').invalid && (form.get('password').touched || form.get('password').dirty)">Mật khẩu: </span><br>
+                    <input type="password" class="mb-2" formControlName="password" (ngModelChange)="useFilter()" nbInput fullWidth [status]="form.get('password').invalid && (form.get('password').touched || form.get('password').dirty) ? 'danger' : 'basic'">
+                    <span *ngIf="form.get('password').invalid && (form.get('password').touched || form.get('password').dirty)" class="text-danger">Họ và tên không được bỏ trống</span>
+                </div>
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('phone').invalid && (form.get('phone').touched || form.get('phone').dirty)">Số điện thoại: </span><br>
+                    <input type="text" class="mb-2" formControlName="phone" (ngModelChange)="useFilter()" nbInput fullWidth [status]="form.get('phone').invalid && (form.get('phone').touched || form.get('phone').dirty) ? 'danger' : 'basic'">
+                    <span *ngIf="form.get('phone').invalid && (form.get('phone').touched || form.get('phone').dirty)" class="text-danger">Số điện thoại nhập không đúng định dạng</span>
+                </div>
+
+                <div class="col-12 my-2">
+                    <span [class.text-danger]="form.get('role').invalid && (form.get('role').touched || form.get('role').dirty)">Đây là: </span><br>
+                    <nb-select formControlName="role" (ngModelChange)="useFilter()" fullWidth [status]="form.get('role').invalid && (form.get('role').touched || form.get('role').dirty) ? 'danger' : 'basic'">
+                        <nb-option *ngFor="let option of [{value: 'user', label: 'Người dùng'}, {value: 'driver', label: 'Người lái'}]" [value]="option.value">
+                            <span>
+              {{ option.label }}
+          </span>
+                        </nb-option>
+                    </nb-select>
+                    <span *ngIf="form.get('role').invalid && (form.get('role').touched || form.get('role').dirty)" class="text-danger">Role là bắt buộc</span>
+                </div>
+            </div>
+        </nb-card-body>
+        <nb-card-footer>
+            <button (click)="create()" [disabled]="form.invalid" [status]="'primary'" nbButton fullWidth>
+            <span><nb-icon [icon]="'plus-circle-outline'"></nb-icon> Tạo</span>
+        </button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

@@ -1,0 +1,65 @@
+@import '../../../../share/styles/themes.scss';
+.category-item {
+    &:hover {
+        cursor: pointer;
+        border: 1px solid #28a745;
+    }
+}
+
+.category-item.active {
+    border: 1px solid #28a745;
+}
+
+/deep/ span.ui-calendar {
+    width: 100%;
+    .ng-trigger.ng-trigger-overlayAnimation.ui-datepicker.ui-widget.ui-widget-content.ui-helper-clearfix.ui-corner-all.ui-datepicker-inline.ng-animate-disabled.ng-star-inserted {
+        width: 100%;
+    }
+}
+
+/deep/ ul.ui-carousel-dots-container.ui-helper-reset {
+    display: none
+}
+
+/deep/ ngx-datatable.order {
+    datatable-body.datatable-body {
+        height: 40vh !important;
+    }
+}
+
+.bg-active {
+    background: #f2f2f2;
+}
+
+.image-service {
+    border: 1px solid grey;
+    border-radius: 10px;
+    .image {
+        height: 200px;
+        width: 200px;
+        border-radius: 100px;
+    }
+}
+
+.hours {
+    .discount {
+        opacity: 0;
+    }
+    &:hover {
+        background: #f2f2f2;
+    }
+}
+
+::ng-deep video {
+    height: 40vh !important;
+    width: 40vh !important;
+    object-fit: scale-down;
+}
+
+.loader {
+    opacity: 0;
+}
+
+.unloader {
+    display: none;
+}
